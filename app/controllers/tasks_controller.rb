@@ -4,6 +4,7 @@ class TasksController < ApplicationController
   # GET /tasks or /tasks.json
   def index
     @tasks = Task.all
+    @tasks = @tasks.joins(:labels).where(labels: { id: params[:label_id] })if params[:label_id].present?
   end
 
   # GET /tasks/1 or /tasks/1.json
