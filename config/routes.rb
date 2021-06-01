@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  post "/graphql", to: "graphql#execute"
   root 'tasks#index'
   resources :labels
   resources :tasks
