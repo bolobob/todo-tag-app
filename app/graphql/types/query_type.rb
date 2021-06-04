@@ -13,5 +13,15 @@ module Types
     def test_field
       "Hello World!"
     end
+
+    field :tasks, [Types::TaskType], null: false
+    def tasks
+      Task.all
+    end
+
+    field :labels, [Types::LabelType], null: false
+    def labels
+      Label.all
+    end
   end
 end
