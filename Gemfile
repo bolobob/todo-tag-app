@@ -52,6 +52,10 @@ group :development do
   gem 'spring-watcher-listen', '~> 2.0.0'
 
   gem 'graphiql-rails'
+
+  gem 'rubocop', require: false
+  gem 'rubocop-performance'
+  gem 'rubocop-rails'
 end
 
 group :test do
