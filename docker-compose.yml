@@ -17,3 +17,13 @@ services:
       - "3000:3000"
     links:
       - db
+
+  frontend:
+    build:
+      context: ./frontend/
+      dockerfile: Dockerfile
+    command:
+    volumes:
+      - ./frontend:/app_name/frontend
+    stdin_open: true
+    tty: true
