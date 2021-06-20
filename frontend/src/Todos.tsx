@@ -6,7 +6,7 @@ import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import ListItemText from "@material-ui/core/ListItemText";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
-import AddIcon from "@material-ui/icons/Add";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { useQuery } from "urql";
@@ -19,6 +19,14 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     newTodoField: {
       flex: "1",
+    },
+    loading: {
+      position: "absolute",
+      top: "0",
+      right: "0",
+      bottom: "0",
+      left: "0",
+      margin: "auto",
     },
   })
 );
@@ -41,7 +49,7 @@ export const Todos = () => {
   const classes = useStyles();
   const [result] = useQuery({ query: TodosQuery });
 
-  if (result.fetching) return <p>Loading...</p>;
+  if (result.fetching) return <CircularProgress className={classes.loading} />;
   if (result.error) return <p>Oh no... {result.error.message}</p>;
 
   return (
