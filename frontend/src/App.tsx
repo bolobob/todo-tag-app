@@ -1,4 +1,4 @@
-import React, { VFC } from "react";
+import { VFC, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -8,6 +8,8 @@ import Button from "@material-ui/core/Button";
 import { createClient, Provider } from "urql";
 import Todos from "./Todos";
 import "./App.css";
+
+import TodoContext from "./contexts/TodoContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -27,22 +29,27 @@ const client = createClient({
 
 const App: VFC = () => {
   const classes = useStyles();
+  const [isEdited, setIsEdited] = useState(false);
 
   return (
     <div className="App">
-      <div className={classes.root}>
-        <AppBar position="static">
-          <Toolbar>
-            <Typography variant="h6" className={classes.title}>
-              Todos
-            </Typography>
-            <Button color="inherit">編集</Button>
-          </Toolbar>
-        </AppBar>
-      </div>
-      <Provider value={client}>
-        <Todos />
-      </Provider>
+      <TodoContext.Provider value={{ isEdited }}>
+        <div className={classes.root}>
+          <AppBar position="static">
+            <Toolbar>
+              <Typography variant="h6" className={classes.title}>
+                Todos
+              </Typography>
+              <Button onClick={() => setIsEdited(!isEdited)} color="inherit">
+                {isEdited ? "決定" : "編集"}
+              </Button>
+            </Toolbar>
+          </AppBar>
+        </div>
+        <Provider value={client}>
+          <Todos />
+        </Provider>
+      </TodoContext.Provider>
     </div>
   );
 };

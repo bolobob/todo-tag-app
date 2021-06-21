@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -10,6 +11,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { useQuery } from "urql";
+import TodoContext from "./contexts/TodoContext";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -48,6 +50,7 @@ type Task = {
 export const Todos = () => {
   const classes = useStyles();
   const [result] = useQuery({ query: TodosQuery });
+  const { isEdited } = useContext(TodoContext);
 
   if (result.fetching) return <CircularProgress className={classes.loading} />;
   if (result.error) return <p>Oh no... {result.error.message}</p>;
@@ -61,11 +64,17 @@ export const Todos = () => {
           return (
             <ListItem key={value} role={undefined} button>
               <ListItemText id={labelId} primary={`Line item ${value + 1}`} />
-              <ListItemSecondaryAction>
-                <IconButton edge="end" aria-label="comments">
-                  <DeleteIcon />
-                </IconButton>
-              </ListItemSecondaryAction>
+              {(() => {
+                if (isEdited) {
+                  return (
+                    <ListItemSecondaryAction>
+                      <IconButton edge="end" aria-label="comments">
+                        <DeleteIcon />
+                      </IconButton>
+                    </ListItemSecondaryAction>
+                  );
+                }
+              })()}
             </ListItem>
           );
         })}
