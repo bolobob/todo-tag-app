@@ -10,6 +10,7 @@ import Todos from "./Todos";
 import "./App.css";
 
 import TodoContext from "./contexts/TodoContext";
+import useTodos from "./hooks/useTodos";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -27,30 +28,9 @@ const client = createClient({
   url: "http://localhost:3001/graphql",
 });
 
-type State = {
-  isEdited: boolean;
-};
-
-type Action = {
-  type: "toggleEdited";
-};
-
-const initialState: State = {
-  isEdited: false,
-};
-
-const reducer = (state: State, action: Action) => {
-  switch (action.type) {
-    case "toggleEdited":
-      return { isEdited: !state.isEdited };
-    default:
-      return state;
-  }
-};
-
 const App: VFC = () => {
   const classes = useStyles();
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const { state, toggleEdited } = useTodos();
 
   return (
     <div className="App">
@@ -61,10 +41,7 @@ const App: VFC = () => {
               <Typography variant="h6" className={classes.title}>
                 Todos
               </Typography>
-              <Button
-                onClick={() => dispatch({ type: "toggleEdited" })}
-                color="inherit"
-              >
+              <Button onClick={toggleEdited} color="inherit">
                 {state.isEdited ? "決定" : "編集"}
               </Button>
             </Toolbar>
