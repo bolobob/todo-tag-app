@@ -58,12 +58,12 @@ export const Todos = () => {
   return (
     <>
       <List className={classes.root} disablePadding={true}>
-        {[0, 1, 2, 3].map((value) => {
-          const labelId = `checkbox-list-label-${value}`;
+        {result.data.tasks.map((task: Task) => {
+          const labelId = `checkbox-list-label-${task.id}`;
 
           return (
-            <ListItem key={value} role={undefined} button>
-              <ListItemText id={labelId} primary={`Line item ${value + 1}`} />
+            <ListItem key={task.id} role={undefined} button>
+              <ListItemText id={labelId} primary={task.title} />
               {(() => {
                 if (isEdited) {
                   return (
@@ -87,11 +87,6 @@ export const Todos = () => {
           </Button>
         </ListItem>
       </List>
-      <ul>
-        {result.data.tasks.map(({ id, title }: Task) => (
-          <li key={id}>{title}</li>
-        ))}
-      </ul>
     </>
   );
 };
