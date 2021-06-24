@@ -30,11 +30,11 @@ const client = createClient({
 
 const App: VFC = () => {
   const classes = useStyles();
-  const { state, toggleEdited } = useTodos();
+  const { state, toggleEdited, setTasks } = useTodos();
 
   return (
     <div className="App">
-      <TodoContext.Provider value={{ isEdited: state.isEdited }}>
+      <TodoContext.Provider value={{ state, setTasks }}>
         <div className={classes.root}>
           <AppBar position="static">
             <Toolbar>

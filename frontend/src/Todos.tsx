@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useEffect, useContext } from "react";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -7,11 +7,11 @@ import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import ListItemText from "@material-ui/core/ListItemText";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { useQuery } from "urql";
+import { useClient } from "urql";
 import TodoContext from "./contexts/TodoContext";
+import { Task } from "./types/task";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -42,30 +42,29 @@ const TodosQuery = `
   }
 `;
 
-type Task = {
-  id: number;
-  title: string;
-};
-
 export const Todos = () => {
   const classes = useStyles();
-  const [result] = useQuery({ query: TodosQuery });
-  const { isEdited } = useContext(TodoContext);
+  const client = useClient();
+  const { state, setTasks } = useContext(TodoContext);
 
-  if (result.fetching) return <CircularProgress className={classes.loading} />;
-  if (result.error) return <p>Oh no... {result.error.message}</p>;
+  useEffect(() => {
+    (async () => {
+      const result = await client.query(TodosQuery).toPromise();
+      setTasks(result.data.tasks);
+    })();
+  }, []);
 
   return (
     <>
       <List className={classes.root} disablePadding={true}>
-        {result.data.tasks.map((task: Task) => {
+        {state.tasks.map((task: Task) => {
           const labelId = `checkbox-list-label-${task.id}`;
 
           return (
             <ListItem key={task.id} role={undefined} button>
               <ListItemText id={labelId} primary={task.title} />
               {(() => {
-                if (isEdited) {
+                if (state.isEdited) {
                   return (
                     <ListItemSecondaryAction>
                       <IconButton edge="end" aria-label="comments">

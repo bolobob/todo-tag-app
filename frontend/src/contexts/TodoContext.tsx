@@ -1,5 +1,11 @@
 import { createContext } from "react";
+import { Task } from "../types/task";
 
-const TodoContext = createContext<{ isEdited: boolean }>({ isEdited: false });
+const TodoContext = createContext(
+  {} as {
+    state: { tasks: Task[]; isEdited: boolean };
+    setTasks: (tasks: Task[]) => void;
+  }
+);
 
 export default TodoContext;
